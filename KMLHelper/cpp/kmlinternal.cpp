@@ -77,13 +77,17 @@ int KML::Internal::stoi(const xerces_string& _Str, size_t *_Idx, int _Base) {	//
 	std::string str = utf16_to_utf8(_Str);
 	const char *_Ptr = str.c_str();
 	char *_Eptr;
+#ifdef _MSC_VER
 	_set_errno(0);
+#endif
 	long _Ans = strtol(_Ptr, &_Eptr, _Base);
 
 	if (_Ptr == _Eptr)
 		throw std::invalid_argument("invalid stoi argument");
+#ifdef _MSC_VER
 	if ((*_errno()) == ERANGE || _Ans < INT_MIN || INT_MAX < _Ans)
 		throw std::out_of_range("stoi argument out of range");
+#endif
 	if (_Idx != 0)
 		*_Idx = (size_t)(_Eptr - _Ptr);
 	return ((int)_Ans);
@@ -94,13 +98,17 @@ double KML::Internal::stod(const xerces_string& _Str, size_t *_Idx) {	// convert
 	std::string str = utf16_to_utf8(_Str);
 	const char *_Ptr = str.c_str();
 	char *_Eptr;
+#ifdef _MSC_VER
 	_set_errno(0);
+#endif
 	double _Ans = strtod(_Ptr, &_Eptr);
 
 	if (_Ptr == _Eptr)
 		throw std::invalid_argument("invalid stod argument");
+#ifdef _MSC_VER
 	if ((*_errno()) == ERANGE)
 		throw std::out_of_range("stod argument out of range");
+#endif
 	if (_Idx != 0)
 		*_Idx = (size_t)(_Eptr - _Ptr);
 	return (_Ans);
